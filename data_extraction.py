@@ -1,9 +1,12 @@
 import pandas as pd
+import tabula
 """
 import pandas as pd: Imports the Pandas library for data manipulation.
 """
 
 # define DataExtractor class
+
+
 class DataExtractor:
     def read_rds_table(self, db_connector, table_name):
         """
@@ -31,6 +34,20 @@ class DataExtractor:
         query = f"SELECT * FROM {table_name}"
         # Execute the query and store the result in a Pandas DataFrame
         df = pd.read_sql(query, engine)
+        return df
+
+    
+    def retrieve_pdf_data(self, pdf_link):
+        """
+        Extracts data from a PDF document and returns it as a Pandas DataFrame.
+        Uses tabula-py to read the PDF from the given link.
+        """
+        # Extract data from the PDF
+        df_list = tabula.read_pdf(pdf_link, pages='all')
+        
+        # Combine all pages into a single DataFrame
+        df = pd.concat(df_list, ignore_index=True)
+        
         return df
 
 if __name__ == '__main__':

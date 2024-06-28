@@ -9,15 +9,16 @@
 5. [Lessons Learned](#lessons-learned)
 6. [License](#license)
 
-## Description - NOTE: CURRENT COMMIT IS EVERYTHING UP TO: Milestone 2 Task 3.
+## Description
 
-This project centralizes sales data for a multinational company into a single PostgreSQL database, making it easily accessible and analyzable. The primary tasks include setting up the database, extracting data from various sources (such as AWS RDS), cleaning the data, and loading it into a local PostgreSQL database. This centralised database acts as a single source of truth for sales data, facilitating up-to-date metrics for the business.
+This project centralizes sales data for a multinational company into a single PostgreSQL database, making it easily accessible and analyzable. The primary tasks include setting up the database, extracting data from various sources (such as AWS RDS and PDF files), cleaning the data, and loading it into a local PostgreSQL database. This centralized database acts as a single source of truth for sales data, facilitating up-to-date metrics for the business.
 
 ### What I Learned
 
 - How to set up and connect to both remote and local PostgreSQL databases using SQLAlchemy.
 - How to securely handle database credentials using YAML files.
 - Extracting data from remote databases and loading it into Pandas DataFrames.
+- Extracting data from PDFs using `tabula-py`.
 - Cleaning data, including handling missing columns and data types.
 - Debugging and error handling in data processing.
 - Using `.gitignore` to exclude sensitive files from version control.
@@ -29,7 +30,7 @@ This project centralizes sales data for a multinational company into a single Po
 1. Ensure you have Python and PostgreSQL installed on your system.
 2. Clone this repository to your local machine using:
     ```sh
-    git clone https://github.com/yourusername/multinational-retail-data-centralisation652.git
+    git clone https://github.com/isaac-nabe/multinational-retail-data-centralisation652.git
     ```
 3. Navigate to the project directory:
     ```sh
@@ -37,7 +38,7 @@ This project centralizes sales data for a multinational company into a single Po
     ```
 4. Install the required Python packages:
     ```sh
-    pip install -r  required_packages.txt
+    pip install -r requirements.txt
     ```
 5. Ensure you have two YAML files for database credentials:
     - `db_creds_rds.yaml` for the remote RDS database credentials.
@@ -56,9 +57,10 @@ This project centralizes sales data for a multinational company into a single Po
     ```sh
     python main.py
     ```
-3. Verify the data by checking the `dim_users` table in your `sales_data` database using pgAdmin4 or any SQL client:
+3. Verify the data by checking the `dim_users` and `dim_card_details` tables in your `sales_data` database using pgAdmin4 or any SQL client:
     ```sql
     SELECT * FROM dim_users;
+    SELECT * FROM dim_card_details;
     ```
 
 ## File Structure
@@ -72,8 +74,8 @@ Multinational-Retail-Data-Centralisation/
 ├── README.md
 ├── db_creds_rds.yaml # Should be added to .gitignore
 ├── db_creds_local.yaml # Should be added to .gitignore
+├── required_packages.txt
 ```
-
 
 ### Description of Files
 
@@ -85,6 +87,7 @@ Multinational-Retail-Data-Centralisation/
 - **README.md**: This README file.
 - **db_creds_rds.yaml**: YAML file containing credentials for the remote RDS database (should be added to .gitignore).
 - **db_creds_local.yaml**: YAML file containing credentials for the local PostgreSQL database (should be added to .gitignore).
+- **required_packages.txt**: File containing the required Python packages for the project.
 
 ## Lessons Learned
 
@@ -96,9 +99,11 @@ Multinational-Retail-Data-Centralisation/
 
 3. **Data Extraction**:
    - Learned how to extract data from a remote database and load it into a Pandas DataFrame for further processing.
+   - Learned how to extract data from a PDF using `tabula-py` and load it into a Pandas DataFrame.
 
 4. **Data Cleaning**:
    - Understood the importance of handling missing columns and data types during the data cleaning process.
+   - Developed methods to clean user data and card data effectively.
 
 5. **Debugging and Error Handling**:
    - Gained experience in identifying and fixing various errors related to file handling, database connectivity, and data processing.
@@ -109,3 +114,6 @@ Multinational-Retail-Data-Centralisation/
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](https://choosealicense.com/licenses/mit/) file for more details.
+
+
+
