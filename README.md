@@ -38,7 +38,7 @@ This project centralizes sales data for a multinational company into a single Po
     ```
 4. Install the required Python packages:
     ```sh
-    pip install -r requirements.txt
+    pip install -r required_packages.txt
     ```
 5. Ensure you have two YAML files for database credentials:
     - `db_creds_rds.yaml` for the remote RDS database credentials.
