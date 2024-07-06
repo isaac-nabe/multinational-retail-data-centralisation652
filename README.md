@@ -43,10 +43,15 @@ This project centralizes sales data for a multinational company into a single Po
 5. Ensure you have two YAML files for database credentials:
     - `db_creds_rds.yaml` for the remote RDS database credentials.
     - `db_creds_local.yaml` for the local PostgreSQL database credentials.
-6. Add these files to your `.gitignore` to prevent them from being tracked in version control:
+6. Create a `config.py` file for your API key:
+    ```python
+    API_KEY = 'your_api_key_here'
+    ```
+7. Add these files to your `.gitignore` to prevent them from being tracked in version control:
     ```plaintext
     db_creds_rds.yaml
     db_creds_local.yaml
+    config.py
     __pycache__/
     ```
 
@@ -57,39 +62,42 @@ This project centralizes sales data for a multinational company into a single Po
     ```sh
     python main.py
     ```
-3. Verify the data by checking the `dim_users` and `dim_card_details` tables in your `sales_data` database using pgAdmin4 or any SQL client:
+3. Verify the data by checking the `dim_users`, `dim_card_details`, and `dim_store_details` tables in your `sales_data` database using pgAdmin4 or any SQL client:
     ```sql
     SELECT * FROM dim_users;
     SELECT * FROM dim_card_details;
+    SELECT * FROM dim_store_details;
     ```
 
 ## File Structure
 ```
 Multinational-Retail-Data-Centralisation/
 ├── .gitignore
+├── config.py # Should be added to .gitignore
+├── db_creds_local.yaml # Should be added to .gitignore
+├── db_creds_rds.yaml # Should be added to .gitignore
 ├── data_cleaning.py
 ├── data_extraction.py
 ├── database_utils.py
 ├── main.py
-├── README.md
-├── db_creds_rds.yaml # Should be added to .gitignore
-├── db_creds_local.yaml # Should be added to .gitignore
+├── README.md # This README.md
 ├── required_packages.txt
 ```
 
 ### Description of Files
 
 - **.gitignore**: Specifies files and directories to be ignored by git, including credentials and `__pycache__` directories.
+- **config.py**: Contains the API key for accessing store data.
+- **db_creds_rds.yaml**: YAML file containing credentials for the remote RDS database (should be added to .gitignore).
+- **db_creds_local.yaml**: YAML file containing credentials for the local PostgreSQL database (should be added to .gitignore).
 - **data_cleaning.py**: Contains the `DataCleaning` class for cleaning extracted data.
 - **data_extraction.py**: Contains the `DataExtractor` class for extracting data from various sources.
 - **database_utils.py**: Contains the `DatabaseConnector` class for handling database connections and operations.
 - **main.py**: Main script to run the ETL (Extract, Transform, Load) process, integrating all modules.
 - **README.md**: This README file.
-- **db_creds_rds.yaml**: YAML file containing credentials for the remote RDS database (should be added to .gitignore).
-- **db_creds_local.yaml**: YAML file containing credentials for the local PostgreSQL database (should be added to .gitignore).
 - **required_packages.txt**: File containing the required Python packages for the project.
 
-## Lessons Learned
+## Lessons Learned - "How to build an ETL Pipeline"
 
 1. **Database Connectivity**:
    - Learned how to set up and connect to both remote and local PostgreSQL databases using SQLAlchemy.
@@ -100,10 +108,11 @@ Multinational-Retail-Data-Centralisation/
 3. **Data Extraction**:
    - Learned how to extract data from a remote database and load it into a Pandas DataFrame for further processing.
    - Learned how to extract data from a PDF using `tabula-py` and load it into a Pandas DataFrame.
+   - Learned how to extract data from an API and handle authentication securely.
 
 4. **Data Cleaning**:
-   - Understood the importance of handling missing columns and data types during the data cleaning process.
-   - Developed methods to clean user data and card data effectively.
+   - Understood the importance of handling missing columns, data types, and erroneous values during the data cleaning process.
+   - Developed methods to clean user data, card data, and store data effectively.
 
 5. **Debugging and Error Handling**:
    - Gained experience in identifying and fixing various errors related to file handling, database connectivity, and data processing.
@@ -114,6 +123,5 @@ Multinational-Retail-Data-Centralisation/
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](https://choosealicense.com/licenses/mit/) file for more details.
-
 
 
