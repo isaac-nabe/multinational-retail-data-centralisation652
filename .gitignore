@@ -1,5 +1,13 @@
 db_creds_rds.yaml
 db_creds_local.yaml
 config.py
+
 __pycache__/
 
+cleaned_card_data.csv
+cleaned_stores_data.csv
+cleaned_stores_data_sample.csv
+cleaned_user_data.csv
+sample_df_pre_clean.csv
+test_clean_stores_data.py
+test_retrieve_and_inspect_stores_data.py
