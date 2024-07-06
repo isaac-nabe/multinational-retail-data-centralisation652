@@ -1,4 +1,5 @@
 db_creds_rds.yaml
 db_creds_local.yaml
+config.py
 __pycache__/
 
