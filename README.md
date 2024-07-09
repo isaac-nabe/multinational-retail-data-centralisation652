@@ -66,21 +66,22 @@ This project centralizes sales data for a multinational company into a single Po
     ```sh
     python main.py
     ```
-3. Verify the data by checking the `dim_users`, `dim_card_details`, `dim_store_details`, and `dim_products` tables in your `sales_data` database using pgAdmin4 or any SQL client:
+3. Verify the data by checking the `dim_users`, `dim_card_details`, `dim_store_details`, `dim_products`, and `orders_table` tables in your `sales_data` database using pgAdmin4 or any SQL client:
     ```sql
     SELECT * FROM dim_users;
     SELECT * FROM dim_card_details;
     SELECT * FROM dim_store_details;
     SELECT * FROM dim_products;
+    SELECT * FROM orders_table;
     ```
 
 ## File Structure
 ```
 Multinational-Retail-Data-Centralisation/
-├── .gitignore
-├── config.py # Should be added to .gitignore
-├── db_creds_local.yaml # Should be added to .gitignore
-├── db_creds_rds.yaml # Should be added to .gitignore
+├── .gitign/ore
+	├── config.py # Should be added to .gitignore
+	├── db_creds_local.yaml # Should be added to .gitignore
+	├── db_creds_rds.yaml # Should be added to .gitignore
 ├── data_cleaning.py
 ├── data_extraction.py
 ├── database_utils.py
@@ -119,6 +120,7 @@ Multinational-Retail-Data-Centralisation/
 4. **Data Cleaning**:
    - Understood the importance of handling missing columns, data types, and erroneous values during the data cleaning process.
    - Developed methods to clean user data, card data, store data, and product data effectively.
+   - Developed methods to clean orders data by removing unnecessary columns and ensuring consistency.
 
 5. **Debugging and Error Handling**:
    - Gained experience in identifying and fixing various errors related to file handling, database connectivity, and data processing.
@@ -129,9 +131,3 @@ Multinational-Retail-Data-Centralisation/
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](https://choosealicense.com/licenses/mit/) file for more details.
-
-
-
-
-
-
