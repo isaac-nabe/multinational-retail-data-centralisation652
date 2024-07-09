@@ -10,48 +10,42 @@ class DataCleaning:
         :param df: DataFrame containing user data.
         :return: Cleaned DataFrame.
         """
-        print("DataFrame columns:", df.columns)
+        # Drop rows with NaN values in critical columns
+        df = df.dropna(subset=['date_of_birth', 'join_date'])
 
-        # Remove non-digit characters from 'phone_number'
-        df.loc[:, 'phone_number'] = df['phone_number'].str.replace(
-            r'\D', '', regex=True)
+        # not going to clean the phone data as I believe the data itself isn't supposed to be uniform.
+        # perhaps it would be better to seperate into seperate country specific data by the country codes, then format the specific data in those seperte dfs.
 
         # Convert 'join_date' to datetime format
-        df.loc[:, 'join_date'] = pd.to_datetime(
-            df['join_date'], errors='coerce')
+        df['join_date'] = pd.to_datetime(df['join_date'], errors='coerce')
+
+        # Convert 'date_of_birth' to datetime format
+        df['date_of_birth'] = pd.to_datetime(df['date_of_birth'], errors='coerce')
 
         # Convert 'country_code' to uppercase
-        df.loc[:, 'country_code'] = df['country_code'].str.upper()
+        df['country_code'] = df['country_code'].str.upper()
 
         # Convert 'index' to numeric and ensure integer type
         try:
-            df.loc[:, 'index'] = pd.to_numeric(df['index']).astype('Int64')
+            df['index'] = pd.to_numeric(df['index']).astype('Int64')
         except ValueError:
             print("ValueError encountered while converting 'index' to numeric.")
 
         # Convert 'first_name' and 'last_name' to title case
-        df.loc[:, 'first_name'] = df['first_name'].str.title()
-        df.loc[:, 'last_name'] = df['last_name'].str.title()
+        df['first_name'] = df['first_name'].str.title()
+        df['last_name'] = df['last_name'].str.title()
 
         # Strip whitespace and convert 'company' and 'address' to title case
-        df.loc[:, 'company'] = df['company'].str.strip().str.title()
-        df.loc[:, 'address'] = df['address'].str.strip().str.title()
+        df['company'] = df['company'].str.strip().str.title()
+        df['address'] = df['address'].str.strip().str.title()
 
         # Strip whitespace from 'user_uuid'
-        df.loc[:, 'user_uuid'] = df['user_uuid'].str.strip()
-
-        # Convert 'date_of_birth' to datetime format
-        df.loc[:, 'date_of_birth'] = pd.to_datetime(
-            df['date_of_birth'], errors='coerce')
+        df['user_uuid'] = df['user_uuid'].str.strip()
 
         # Clean 'email_address' by stripping whitespace and converting to lowercase
-        df.loc[:, 'email_address'] = df['email_address'].str.strip().str.lower()
+        df['email_address'] = df['email_address'].str.strip().str.lower()
         # Keep only rows with valid email addresses
-        df = df[df['email_address'].apply(
-            lambda x: re.match(r'^\S+@\S+\.\S+$', x) is not None)]
-
-        # Remove rows with any NULL values
-        df = df.dropna()
+        df = df[df['email_address'].apply(lambda x: re.match(r'^\S+@\S+\.\S+$', x) is not None)]
 
         return df
 
