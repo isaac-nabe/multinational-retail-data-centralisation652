@@ -79,7 +79,7 @@ This project centralizes sales data for a multinational company into a single Po
 ## File Structure
 ```
 Multinational-Retail-Data-Centralisation/
-├── .gitgn//ore
+├── .gitignore/
 	├── config.py # Should be added to .gitignore
 	├── db_creds_local.yaml # Should be added to .gitignore
 	├── db_creds_rds.yaml # Should be added to .gitignore
