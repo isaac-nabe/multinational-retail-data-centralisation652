@@ -43,9 +43,13 @@ This project centralizes sales data for a multinational company into a single Po
 5. Ensure you have two YAML files for database credentials:
     - `db_creds_rds.yaml` for the remote RDS database credentials.
     - `db_creds_local.yaml` for the local PostgreSQL database credentials.
-6. Create a `config.py` file for your API key:
+6. Create a `config.py` file for your API key and other configuration variables:
     ```python
+    pdf_link = 'your_pdf_link_here'
     API_KEY = 'your_api_key_here'
+    number_of_stores_url = 'your_number_of_stores_url_here'
+    store_url_template = 'your_store_url_template_here'
+    s3_address = 'your_s3_address_here'
     ```
 7. Add these files to your `.gitignore` to prevent them from being tracked in version control:
     ```plaintext
@@ -62,11 +66,12 @@ This project centralizes sales data for a multinational company into a single Po
     ```sh
     python main.py
     ```
-3. Verify the data by checking the `dim_users`, `dim_card_details`, and `dim_store_details` tables in your `sales_data` database using pgAdmin4 or any SQL client:
+3. Verify the data by checking the `dim_users`, `dim_card_details`, `dim_store_details`, and `dim_products` tables in your `sales_data` database using pgAdmin4 or any SQL client:
     ```sql
     SELECT * FROM dim_users;
     SELECT * FROM dim_card_details;
     SELECT * FROM dim_store_details;
+    SELECT * FROM dim_products;
     ```
 
 ## File Structure
@@ -87,7 +92,7 @@ Multinational-Retail-Data-Centralisation/
 ### Description of Files
 
 - **.gitignore**: Specifies files and directories to be ignored by git, including credentials and `__pycache__` directories.
-- **config.py**: Contains the API key for accessing store data.
+- **config.py**: Contains the API key and other configuration variables.
 - **db_creds_rds.yaml**: YAML file containing credentials for the remote RDS database (should be added to .gitignore).
 - **db_creds_local.yaml**: YAML file containing credentials for the local PostgreSQL database (should be added to .gitignore).
 - **data_cleaning.py**: Contains the `DataCleaning` class for cleaning extracted data.
@@ -109,10 +114,11 @@ Multinational-Retail-Data-Centralisation/
    - Learned how to extract data from a remote database and load it into a Pandas DataFrame for further processing.
    - Learned how to extract data from a PDF using `tabula-py` and load it into a Pandas DataFrame.
    - Learned how to extract data from an API and handle authentication securely.
+   - Learned how to extract data from an S3 bucket using `boto3`.
 
 4. **Data Cleaning**:
    - Understood the importance of handling missing columns, data types, and erroneous values during the data cleaning process.
-   - Developed methods to clean user data, card data, and store data effectively.
+   - Developed methods to clean user data, card data, store data, and product data effectively.
 
 5. **Debugging and Error Handling**:
    - Gained experience in identifying and fixing various errors related to file handling, database connectivity, and data processing.
@@ -123,5 +129,9 @@ Multinational-Retail-Data-Centralisation/
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](https://choosealicense.com/licenses/mit/) file for more details.
+
+
+
+
 
 

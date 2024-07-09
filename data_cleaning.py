@@ -117,13 +117,15 @@ class DataCleaning:
         df = df.drop(columns=['lat'])
 
         # Convert 'staff_numbers' to numeric, setting errors='coerce' to convert non-numeric values to NaN
-        df['staff_numbers'] = pd.to_numeric(df['staff_numbers'], errors='coerce')
+        df['staff_numbers'] = pd.to_numeric(
+            df['staff_numbers'], errors='coerce')
 
         # Convert 'staff_numbers' to integer
         df['staff_numbers'] = df['staff_numbers'].astype('Int64')
 
         # Convert 'opening_date' to datetime
-        df['opening_date'] = pd.to_datetime(df['opening_date'], errors='coerce')  # Convert to datetime
+        df['opening_date'] = pd.to_datetime(
+            df['opening_date'], errors='coerce')  # Convert to datetime
 
         # Drop rows with NaN values in 'staff_numbers' and 'opening_date' columns
         df = df.dropna(subset=['staff_numbers', 'opening_date'])
@@ -133,7 +135,8 @@ class DataCleaning:
 
         # Convert 'longitude' and 'latitude' to float
         try:
-            df['longitude'] = pd.to_numeric(df['longitude'])  # Convert to float
+            df['longitude'] = pd.to_numeric(
+                df['longitude'])  # Convert to float
         except ValueError as e:
             print(e)
             print("ValueError encountered while converting 'longitude' to numeric.")
@@ -145,16 +148,78 @@ class DataCleaning:
             print("ValueError encountered while converting 'latitude' to numeric.")
 
         # Standardize text format
-        df['address'] = df['address'].str.title()  # Standardize address text format
-        df['country_code'] = df['country_code'].str.upper()  # Convert country codes to upper case
+        # Standardize address text format
+        df['address'] = df['address'].str.title()
+        # Convert country codes to upper case
+        df['country_code'] = df['country_code'].str.upper()
 
         # Save the DataFrame to a CSV file
-        df.to_csv('cleaned_stores_data_sample.csv', index=False)
+        # df.to_csv('cleaned_stores_data_sample.csv', index=False)
         # open with DataPreview extension
 
         return df  # Make sure to return the cleaned DataFrame
 
+    def clean_product_data(self, df):
+        """
+        Convert product weights to kilograms.
 
+        This method processes the 'weight' column in the provided DataFrame to ensure all weights
+        are represented in kilograms. It handles weights given in various units such as kg, g, and ml.
+
+        :param df: DataFrame containing product data with a 'weight' column.
+        :return: DataFrame with weights converted to kilograms as float.
+        """
+        # Convert 'date_added' to datetime format
+        df.loc[:, 'date_added'] = pd.to_datetime(
+            df['date_added'], errors='coerce')
+
+        # Drop rows with NaN values in 'staff_numbers' and 'opening_date' columns
+        df = df.dropna(subset=['EAN', 'date_added'])
+
+        def convert_weight(weight):
+            """
+            Convert individual weight values to kilograms.
+
+            :param weight: Weight value as a string.
+            :return: Weight in kilograms as a float.
+            """
+            # Ensure the weight is a string and normalize it
+            weight = str(weight).lower().strip()
+
+            # If weight is in the format like '12 x 100g'
+            if 'x' in weight:
+                parts = weight.split('x')
+                if len(parts) == 2:
+                    try:
+                        quantity = int(parts[0].strip())  # Extract quantity
+                        unit_weight = re.sub(r'[^\d.]', '', parts[1].strip())  # Extract unit weight
+                        if 'kg' in parts[1]:
+                            return quantity * float(unit_weight)
+                        elif 'g' in parts[1]:
+                            return quantity * float(unit_weight) / 1000
+                        elif 'ml' in parts[1]:
+                            return quantity * float(unit_weight) / 1000
+                    except ValueError:
+                        pass  # If conversion fails, return 0
+                return 0
+
+            # If weight is in kilograms
+            if 'kg' in weight:
+                return float(weight.replace('kg', '').strip().rstrip('.'))
+            # If weight is in grams
+            elif 'g' in weight:
+                return float(weight.replace('g', '').strip().rstrip('.')) / 1000
+            # If weight is in milliliters (assuming 1ml = 1g for approximation)
+            elif 'ml' in weight:
+                return float(weight.replace('ml', '').strip().rstrip('.')) / 1000
+            else:
+                # Remove non-numeric characters and convert to float
+                clean_weight = re.sub(r'[^\d.]+', '', weight).rstrip('.')
+                return float(clean_weight) / 1000 if clean_weight else 0
+
+        # Apply the conversion to each value in the 'weight' column
+        df['weight'] = df['weight'].apply(convert_weight)
+        return df  # Return the updated DataFrame
 
 
 if __name__ == '__main__':

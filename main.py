@@ -1,7 +1,11 @@
 from database_utils import DatabaseConnector
 from data_extraction import DataExtractor
 from data_cleaning import DataCleaning
+from config import pdf_link
 from config import API_KEY
+from config import number_of_stores_url
+from config import store_url_template
+from config import s3_address
 
 
 def main():
@@ -46,9 +50,6 @@ def main():
     print("Cleaned user data uploaded successfully to 'dim_users' table")
 
     """M2:T4 - Extract and clean card details"""
-    # Define the link to the PDF file containing card data
-    pdf_link = "https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf"
-
     # Extract card data from the PDF file
     card_data_df = data_extractor.retrieve_pdf_data(pdf_link)
     print("Card data extracted successfully")
@@ -73,15 +74,9 @@ def main():
     # NOTE hide this key inside a config.py or config.yaml so that it's not hard coded 
     headers = {"x-api-key": API_KEY} # changed to API_KEY because it's already imported above
 
-    # Define the URL to get the number of stores
-    number_of_stores_url = "https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores"
-
     # Retrieve the total number of stores
     number_of_stores = data_extractor.list_number_of_stores(number_of_stores_url, headers)
     print(f"Number of stores: {number_of_stores}")
-
-    # Define the URL template to get store details
-    store_url_template = "https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/{store_number}"
 
     # Retrieve data for all stores
     stores_df = data_extractor.retrieve_stores_data(store_url_template, headers, number_of_stores)
@@ -102,6 +97,25 @@ def main():
         print("Cleaned store data uploaded successfully to 'dim_store_details' table")
     else:
         print("Failed to create DataFrame from stores data.")
+
+    """M2:T6 - Extract & Clean Product Details"""
+    product_data_df = data_extractor.extract_from_s3(s3_address)
+    print("Product data extracted successfully")
+    print("Extracted Product DataFrame head:\n", product_data_df.head())
+    product_data_df.info()
+
+    converted_product_weights_df = data_cleaning.clean_product_data(product_data_df)
+    print("Converted product weights successfully")
+    print("Converted Product DataFrame head:\n", converted_product_weights_df.head())
+    converted_product_weights_df.info()
+
+    # Save the converted product weights data to a CSV file
+    converted_product_weights_df.to_csv("cleaned_product_data.csv", index=False)
+    # open with DataPreview extension
+
+    # Upload the cleaned product data to the 'dim_products' table
+    db_connector.upload_to_db(converted_product_weights_df, 'dim_products')
+    print("Cleaned product data uploaded successfully to 'dim_products' table")
 
 if __name__ == "__main__":
     main()

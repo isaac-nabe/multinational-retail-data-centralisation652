@@ -11,3 +11,5 @@ cleaned_user_data.csv
 sample_df_pre_clean.csv
 test_clean_stores_data.py
 test_retrieve_and_inspect_stores_data.py
+products.csv
+cleaned_product_data.csv

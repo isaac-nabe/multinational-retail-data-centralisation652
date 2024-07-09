@@ -1,6 +1,8 @@
 import pandas as pd
 import tabula
 import requests
+import boto3
+
 
 class DataExtractor:
     def read_rds_table(self, db_connector, table_name):
@@ -13,7 +15,7 @@ class DataExtractor:
         """
         # Read database credentials from a YAML file
         creds = db_connector.read_db_creds('db_creds_rds.yaml')
-        
+
         # Initialize a database engine using the credentials
         engine = db_connector.init_db_engine({
             'USER': creds['RDS_USER'],
@@ -22,13 +24,13 @@ class DataExtractor:
             'PORT': creds['RDS_PORT'],
             'DATABASE': creds['RDS_DATABASE']
         })
-        
+
         # SQL query to select all data from the specified table
         query = f"SELECT * FROM {table_name}"
-        
+
         # Execute the query and read the data into a Pandas DataFrame
         df = pd.read_sql(query, engine)
-        
+
         # Return the DataFrame
         return df
 
@@ -41,10 +43,10 @@ class DataExtractor:
         """
         # Use Tabula to read the PDF and extract all pages into a list of DataFrames
         df_list = tabula.read_pdf(pdf_link, pages='all')
-        
+
         # Concatenate all DataFrames in the list into a single DataFrame
         df = pd.concat(df_list, ignore_index=True)
-        
+
         # Return the DataFrame
         return df
 
@@ -58,17 +60,18 @@ class DataExtractor:
         """
         # Send a GET request to the API endpoint with the provided headers
         response = requests.get(url, headers=header)
-        
+
         # Parse the JSON response
         data = response.json()
-        
+
         # Check if the response is successful and contains 'number_stores' key
         if response.status_code == 200 and 'number_stores' in data:
             # Return the total number of stores
             return data['number_stores']
         else:
             # Raise an error if the 'number_stores' key is not found in the response
-            raise KeyError(f"'number_stores' key not found in response: {data}")
+            raise KeyError(
+                f"'number_stores' key not found in response: {data}")
 
     def retrieve_stores_data(self, url, header, number_of_stores):
         """
@@ -81,15 +84,15 @@ class DataExtractor:
         """
         # Initialize an empty list to hold store data
         stores_data = []
-        
+
         # Loop over the range of store numbers to retrieve data for each store
         for store_number in range(0, number_of_stores):
             # Format the store URL with the current store number
             store_url = url.format(store_number=store_number)
-            
+
             # Send a GET request to the store URL with the provided headers
             response = requests.get(store_url, headers=header)
-            
+
             if response.status_code == 200:
                 try:
                     # Parse the JSON response and append it to the stores_data list
@@ -100,20 +103,45 @@ class DataExtractor:
                     print(f"Error parsing JSON for store {store_number}: {e}")
             else:
                 # Print an error message if the request fails
-                print(f"Error fetching data for store {store_number}: {response.status_code}, {response.text}")
-                
+                print(f"Error fetching data for store {store_number}: {
+                      response.status_code}, {response.text}")
+
                 # Break the loop if a 404 error is encountered (store not found)
                 if response.status_code == 404:
                     break
 
         # Convert the list of store data into a Pandas DataFrame
         df = pd.DataFrame(stores_data)
-        
+
         # save df as csv
-        df.to_csv('sample_df_pre_clean.csv', index=False)
+        # df.to_csv('sample_df_pre_clean.csv', index=False)
 
         # Return the DataFrame
         return df
+
+    def extract_from_s3(self, s3_address):
+        """
+        Downloads and extracts a CSV file from an S3 bucket.
+
+        :param s3_address: S3 address of the file.
+        :return: DataFrame containing the data from the CSV file.
+
+        """
+        # Parse the S3 address to get the bucket name and file key
+        bucket_name = s3_address.split('/')[2]  # Extracts the bucket name from the S3 address
+        file_key = '/'.join(s3_address.split('/')[3:])  # Extracts the file key from the S3 address
+
+        # Create a boto3 client to interact with S3
+        s3 = boto3.client('s3')
+
+        # Download the file from S3
+        s3.download_file(bucket_name, file_key, 'products.csv')  # Uses the extracted bucket name and file key
+
+        # Load the downloaded file into a DataFrame
+        df = pd.read_csv('products.csv')
+
+        return df
+
 
 if __name__ == '__main__':
     pass
