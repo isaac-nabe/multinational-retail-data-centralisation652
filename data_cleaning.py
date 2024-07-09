@@ -226,7 +226,7 @@ class DataCleaning:
         :return: Cleaned DataFrame.
         """
         # Drop the columns 'first_name', 'last_name', and '1'
-        df = df.drop(columns=['1'])
+        df.drop(columns=['1', 'first_name', 'last_name'], inplace=True)
 
         # Additional cleaning steps can be added here if necessary
 
