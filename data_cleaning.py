@@ -20,7 +20,8 @@ class DataCleaning:
         df['join_date'] = pd.to_datetime(df['join_date'], errors='coerce')
 
         # Convert 'date_of_birth' to datetime format
-        df['date_of_birth'] = pd.to_datetime(df['date_of_birth'], errors='coerce')
+        df['date_of_birth'] = pd.to_datetime(
+            df['date_of_birth'], errors='coerce')
 
         # Convert 'country_code' to uppercase
         df['country_code'] = df['country_code'].str.upper()
@@ -45,7 +46,8 @@ class DataCleaning:
         # Clean 'email_address' by stripping whitespace and converting to lowercase
         df['email_address'] = df['email_address'].str.strip().str.lower()
         # Keep only rows with valid email addresses
-        df = df[df['email_address'].apply(lambda x: re.match(r'^\S+@\S+\.\S+$', x) is not None)]
+        df = df[df['email_address'].apply(
+            lambda x: re.match(r'^\S+@\S+\.\S+$', x) is not None)]
 
         return df
 
@@ -186,7 +188,8 @@ class DataCleaning:
                 if len(parts) == 2:
                     try:
                         quantity = int(parts[0].strip())  # Extract quantity
-                        unit_weight = re.sub(r'[^\d.]', '', parts[1].strip())  # Extract unit weight
+                        # Extract unit weight
+                        unit_weight = re.sub(r'[^\d.]', '', parts[1].strip())
                         if 'kg' in parts[1]:
                             return quantity * float(unit_weight)
                         elif 'g' in parts[1]:
@@ -214,6 +217,20 @@ class DataCleaning:
         # Apply the conversion to each value in the 'weight' column
         df['weight'] = df['weight'].apply(convert_weight)
         return df  # Return the updated DataFrame
+
+    def clean_orders_data(self, df):
+        """
+        Cleans the orders data DataFrame by removing unnecessary columns.
+
+        :param df: DataFrame containing orders data.
+        :return: Cleaned DataFrame.
+        """
+        # Drop the columns 'first_name', 'last_name', and '1'
+        df = df.drop(columns=['1'])
+
+        # Additional cleaning steps can be added here if necessary
+
+        return df
 
 
 if __name__ == '__main__':

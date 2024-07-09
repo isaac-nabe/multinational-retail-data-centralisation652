@@ -117,5 +117,27 @@ def main():
     db_connector.upload_to_db(converted_product_weights_df, 'dim_products')
     print("Cleaned product data uploaded successfully to 'dim_products' table")
 
+
+    """M2:T7 - Retrieve & Clean the Orders Table"""
+    # Read the user data from the 'legacy_users' table
+    orders_data_df = data_extractor.read_rds_table(db_connector, 'orders_table')
+    print("User data extracted successfully")
+    print("Extracted DataFrame head:\n", orders_data_df.head())
+    orders_data_df.info()
+
+    # Clean orders data
+    cleaned_orders_data_df = data_cleaning.clean_orders_data(orders_data_df)
+    print("Orders data cleaned successfully")
+    print("Cleaned Orders DataFrame head:\n", cleaned_orders_data_df.head())
+    cleaned_orders_data_df.info()
+
+    # Save the cleaned orders table data to a CSV file
+    orders_data_df.to_csv("cleaned_orders_table.csv", index=False)
+    # open with DataPreview extension
+
+    # Upload the cleaned orders data to the database
+    db_connector.upload_to_db(cleaned_orders_data_df, 'orders_table')
+    print("Cleaned orders data uploaded successfully to 'orders_table'")
+
 if __name__ == "__main__":
     main()
