@@ -49,7 +49,8 @@ This project centralizes sales data for a multinational company into a single Po
     API_KEY = 'your_api_key_here'
     number_of_stores_url = 'your_number_of_stores_url_here'
     store_url_template = 'your_store_url_template_here'
-    s3_address = 'your_s3_address_here'
+    s3_products_address = 'your_s3_products_address_here'
+    s3_sale_dates_address = 'your_s3_sale_dates_address_here'
     ```
 7. Add these files to your `.gitignore` to prevent them from being tracked in version control:
     ```plaintext
@@ -66,13 +67,13 @@ This project centralizes sales data for a multinational company into a single Po
     ```sh
     python main.py
     ```
-3. Verify the data by checking the `dim_users`, `dim_card_details`, `dim_store_details`, `dim_products`, and `orders_table` tables in your `sales_data` database using pgAdmin4 or any SQL client:
+3. Verify the data by checking the `dim_users`, `dim_card_details`, `dim_store_details`, `dim_products`, and `dim_date_times` tables in your `sales_data` database using pgAdmin4 or any SQL client:
     ```sql
     SELECT * FROM dim_users;
     SELECT * FROM dim_card_details;
     SELECT * FROM dim_store_details;
     SELECT * FROM dim_products;
-    SELECT * FROM orders_table;
+    SELECT * FROM dim_date_times;
     ```
 
 ## File Structure
@@ -116,11 +117,11 @@ Multinational-Retail-Data-Centralisation/
    - Learned how to extract data from a PDF using `tabula-py` and load it into a Pandas DataFrame.
    - Learned how to extract data from an API and handle authentication securely.
    - Learned how to extract data from an S3 bucket using `boto3`.
+   - Learned how to extract data from a JSON file using `requests`.
 
 4. **Data Cleaning**:
    - Understood the importance of handling missing columns, data types, and erroneous values during the data cleaning process.
-   - Developed methods to clean user data, card data, store data, and product data effectively.
-   - Developed methods to clean orders data by removing unnecessary columns and ensuring consistency.
+   - Developed methods to clean user data, card data, store data, product data, and date events data effectively.
 
 5. **Debugging and Error Handling**:
    - Gained experience in identifying and fixing various errors related to file handling, database connectivity, and data processing.

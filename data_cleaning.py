@@ -233,5 +233,38 @@ class DataCleaning:
         return df
 
 
+    def clean_date_events_data(self, df):
+        """
+        Cleans the date events data DataFrame by ensuring proper formatting and handling erroneous values.
+
+        :param df: DataFrame containing date events data.
+        :return: Cleaned DataFrame.
+        """
+        # Print a few rows of the 'timestamp' column to identify the format
+        print(df['timestamp'].head())
+
+        # Ensure proper format for month, year, and day columns
+        df['month'] = pd.to_numeric(df['month'], errors='coerce')
+        df['year'] = pd.to_numeric(df['year'], errors='coerce')
+        df['day'] = pd.to_numeric(df['day'], errors='coerce')
+
+        # Drop rows with any NaN values in critical columns
+        df = df.dropna(subset=['timestamp', 'month', 'year', 'day'])
+
+        # Combine date components with time to form a complete datetime string
+        def combine_datetime(row):
+            try:
+                return pd.to_datetime(f"{int(row['year'])}-{int(row['month']):02d}-{int(row['day']):02d} {row['timestamp']}", format='%Y-%m-%d %H:%M:%S', errors='coerce')
+            except ValueError:
+                return pd.NaT
+
+        df['timestamp'] = df.apply(combine_datetime, axis=1)
+
+        # drop uneccessary columns (time stamp includes all of the info for the below columns)
+        df = df.drop(columns=['day', 'month', 'year', 'time_period'])
+
+        return df
+
+
 if __name__ == '__main__':
     pass

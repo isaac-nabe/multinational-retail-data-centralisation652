@@ -119,17 +119,17 @@ class DataExtractor:
         # Return the DataFrame
         return df
 
-    def extract_from_s3(self, s3_address):
+    def extract_from_s3(self, s3_products_address):
         """
         Downloads and extracts a CSV file from an S3 bucket.
 
-        :param s3_address: S3 address of the file.
+        :param s3_products_address: S3 address of the file.
         :return: DataFrame containing the data from the CSV file.
 
         """
         # Parse the S3 address to get the bucket name and file key
-        bucket_name = s3_address.split('/')[2]  # Extracts the bucket name from the S3 address
-        file_key = '/'.join(s3_address.split('/')[3:])  # Extracts the file key from the S3 address
+        bucket_name = s3_products_address.split('/')[2]  # Extracts the bucket name from the S3 address
+        file_key = '/'.join(s3_products_address.split('/')[3:])  # Extracts the file key from the S3 address
 
         # Create a boto3 client to interact with S3
         s3 = boto3.client('s3')
@@ -140,6 +140,20 @@ class DataExtractor:
         # Load the downloaded file into a DataFrame
         df = pd.read_csv('products.csv')
 
+        return df
+
+
+    def extract_json_from_url(self, s3_sale_dates_address):
+        """
+        Extracts a JSON file from the specified URL and returns it as a DataFrame.
+
+        :param url: URL to the JSON file.
+        :return: DataFrame containing the data from the JSON file.
+        """
+        response = requests.get(s3_sale_dates_address)
+        data = response.json()
+        df = pd.DataFrame(data)
+        
         return df
 
 

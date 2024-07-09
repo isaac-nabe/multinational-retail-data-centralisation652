@@ -5,7 +5,8 @@ from config import pdf_link
 from config import API_KEY
 from config import number_of_stores_url
 from config import store_url_template
-from config import s3_address
+from config import s3_products_address
+from config import s3_sale_dates_address
 
 
 def main():
@@ -99,7 +100,7 @@ def main():
         print("Failed to create DataFrame from stores data.")
 
     """M2:T6 - Extract & Clean Product Details"""
-    product_data_df = data_extractor.extract_from_s3(s3_address)
+    product_data_df = data_extractor.extract_from_s3(s3_products_address)
     print("Product data extracted successfully")
     print("Extracted Product DataFrame head:\n", product_data_df.head())
     product_data_df.info()
@@ -132,12 +133,31 @@ def main():
     cleaned_orders_data_df.info()
 
     # Save the cleaned orders table data to a CSV file
-    orders_data_df.to_csv("cleaned_orders_table.csv", index=False)
+    #orders_data_df.to_csv("cleaned_orders_table.csv", index=False)
     # open with DataPreview extension
 
     # Upload the cleaned orders data to the database
     db_connector.upload_to_db(cleaned_orders_data_df, 'orders_table')
     print("Cleaned orders data uploaded successfully to 'orders_table'")
+
+    """M2:T8 - Retrieve & Clean the Date Events Data"""
+    # Extract events data
+    date_events_df = data_extractor.extract_json_from_url(s3_sale_dates_address)
+
+    # Save the date events data to a CSV file
+    # date_events_df.to_csv("date_events_df_pre.csv", index=False)
+    # open with DataPreview extension
+
+    # Clean date events data
+    cleaned_date_events_df = data_cleaning.clean_date_events_data(date_events_df)
+
+    # Save the date events data to a CSV file
+    cleaned_date_events_df.to_csv("cleaned_date_events_df.csv", index=False)
+    # open with DataPreview extension
+
+    # Upload the cleaned date events to the database
+    db_connector.upload_to_db(cleaned_date_events_df, 'dim_date_times')
+    print("Cleaned date events data uploaded successfully to 'dim_date_times'")
 
 if __name__ == "__main__":
     main()
