@@ -24,6 +24,8 @@ This project centralizes sales data for a multinational company into a single Po
 - Using `.gitignore` to exclude sensitive files from version control.
 - Solidified understanding of git staging, committing, and pushing processes.
 - Importance of maintaining a robust data pipeline, breaking down code into single functions, and including debugging processes.
+- Refactoring and optimizing code for better readability, maintainability, and performance.
+- Using type annotations and docstrings to improve code clarity.
 
 ## Installation Instructions
 
@@ -84,11 +86,11 @@ Multinational-Retail-Data-Centralisation/
 	├── db_creds_local.yaml # Should be added to .gitignore
 	├── db_creds_rds.yaml # Should be added to .gitignore
 ├── data_cleaning.py
-├── data_extraction.py
-├── database_utils.py
-├── main.py
-├── README.md # This README.md
-├── required_packages.txt
+├── daextraction.py
+├── abase_utils.py
+├─main.py
+├─README.md # This README.md
+├─required_packages.txt
 ```
 
 ### Description of Files
@@ -128,6 +130,11 @@ Multinational-Retail-Data-Centralisation/
 
 6. **Version Control Best Practices**:
    - Learned to use `.gitignore` to exclude sensitive files from version control and ensure a clean project repository.
+
+7. **Code Refactoring and Optimization**:
+   - Improved code readability and maintainability by using meaningful naming conventions, eliminating code duplication, and adhering to the Single Responsibility Principle (SRP).
+   - Implemented proper error handling and logging to enhance code robustness.
+   - Used type annotations and consistent docstrings to improve code clarity and documentation.
 
 ## License
 

@@ -13,3 +13,5 @@ test_clean_stores_data.py
 test_retrieve_and_inspect_stores_data.py
 products.csv
 cleaned_product_data.csv
+cleaned_orders_data.csv
+cleaned_date_events_df.csv
