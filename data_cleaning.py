@@ -36,9 +36,13 @@ class DataCleaning:
         df.dropna(subset=['expiry_date'], inplace=True)
         df['date_payment_confirmed'] = pd.to_datetime(df['date_payment_confirmed'], errors='coerce')
         df.dropna(subset=['date_payment_confirmed'], inplace=True)
+        
+        # Ensure that 'card_number' remains boolean and other columns are cleaned appropriately
         for column in df.columns:
-            if df[column].dtype == 'object':
-                df[column] = pd.to_numeric(df[column], errors='coerce')
+            if column not in ['card_number', 'card_provider']:
+                if df[column].dtype == 'object':
+                    df[column] = pd.to_numeric(df[column], errors='coerce')
+        
         return df
 
     def clean_store_data(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -109,8 +113,31 @@ class DataCleaning:
         :param df: DataFrame containing orders data.
         :return: Cleaned DataFrame.
         """
-        df.drop(columns=['1', 'first_name', 'last_name'], inplace=True)
+        df.drop(columns=['1', 'first_name', 'last_name', 'level_0'], inplace=True)
         return df
+
+    def clean_date_events_data(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Cleans the date events data DataFrame by ensuring proper formatting and handling erroneous values.
+
+        :param df: DataFrame containing date events data.
+        :return: Cleaned DataFrame.
+        """
+        df['month'] = pd.to_numeric(df['month'], errors='coerce')
+        df['year'] = pd.to_numeric(df['year'], errors='coerce')
+        df['day'] = pd.to_numeric(df['day'], errors='coerce')
+        df = df.dropna(subset=['timestamp', 'month', 'year', 'day'])
+
+        def combine_datetime(row):
+            try:
+                return pd.to_datetime(f"{int(row['year'])}-{int(row['month']):02d}-{int(row['day']):02d} {row['timestamp']}", format='%Y-%m-%d %H:%M:%S', errors='coerce')
+            except ValueError:
+                return pd.NaT
+
+        df['timestamp'] = df.apply(combine_datetime, axis=1)
+        df = df.drop(columns=['day', 'month', 'year', 'time_period'])
+        return df
+
 
     def clean_date_events_data(self, df: pd.DataFrame) -> pd.DataFrame:
         """

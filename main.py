@@ -25,15 +25,15 @@ def extract_and_clean_rds_data(db_connector, data_extractor, table_name, clean_f
     cleaned_data_df = clean_func(data_df)
     print(f"{table_name} data cleaned successfully")
     print("Cleaned DataFrame head:\n", cleaned_data_df.head())
+    print("cleaned_data_df info: ")
     cleaned_data_df.info()
 
-    # Save the cleaned data to a CSV file
+     # Save the cleaned data to a CSV file
     cleaned_data_df.to_csv(output_csv, index=False)
 
     # Upload the cleaned data to the specified table
     db_connector.upload_to_db(cleaned_data_df, db_table_name)
     print(f"Cleaned {table_name} data uploaded successfully to '{db_table_name}' table")
-
 
 def main():
     """
@@ -52,6 +52,10 @@ def main():
     print("Card data extracted successfully")
     print("Extracted Card DataFrame head:\n", card_data_df.head())
     card_data_df.info()
+
+    # Save the casted orders data to a CSV file
+    #card_data_df.to_csv("og_card_data.csv", index=False) 
+
     cleaned_card_data_df = data_cleaning.clean_card_data(card_data_df)
     print("Card data cleaned successfully")
     print("Cleaned Card DataFrame head:\n", cleaned_card_data_df.head())
@@ -90,8 +94,9 @@ def main():
     db_connector.upload_to_db(converted_product_weights_df, 'dim_products')
     print("Cleaned product data uploaded successfully to 'dim_products' table")
 
-    # Extract and clean orders data
+    # Extract & clean orders data
     extract_and_clean_rds_data(db_connector, data_extractor, 'orders_table', data_cleaning.clean_orders_data, "cleaned_orders_data.csv", 'orders_table')
+
 
     # Extract and clean date events data
     date_events_df = data_extractor.extract_json_from_url(s3_sale_dates_address)
