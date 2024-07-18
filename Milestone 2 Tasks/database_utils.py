@@ -64,6 +64,5 @@ class DatabaseConnector:
         engine = self.init_db_engine(creds, creds_type)
         data_frame.to_sql(table_name, engine, if_exists='replace', index=False)
 
-
 if __name__ == '__main__':
     pass
