@@ -11,7 +11,7 @@
 
 ## Description
 
-This project centralizes sales data for a multinational company into a single PostgreSQL database, making it easily accessible and analyzable. The primary tasks include setting up the database, extracting data from various sources (such as AWS RDS and PDF files), cleaning the data, and loading it into a local PostgreSQL database. This centralized database acts as a single source of truth for sales data, facilitating up-to-date metrics for the business.
+This project centralizes sales data for a multinational company into a single PostgreSQL database, making it easily accessible and analyzable. The primary tasks include setting up the database, extracting data from various sources (such as AWS RDS, PDF files, APIs, and S3), cleaning the data, and loading it into a local PostgreSQL database. This centralized database acts as a single source of truth for sales data, facilitating up-to-date metrics for the business.
 
 ### What I Learned
 
@@ -19,6 +19,9 @@ This project centralizes sales data for a multinational company into a single Po
 - How to securely handle database credentials using YAML files.
 - Extracting data from remote databases and loading it into Pandas DataFrames.
 - Extracting data from PDFs using `tabula-py`.
+- Extracting data from APIs and handling authentication.
+- Extracting data from S3 buckets using `boto3`.
+- Extracting data from JSON files using `requests`.
 - Cleaning data, including handling missing columns and data types.
 - Debugging and error handling in data processing.
 - Using `.gitignore` to exclude sensitive files from version control.
@@ -69,7 +72,11 @@ This project centralizes sales data for a multinational company into a single Po
     ```sh
     python main.py
     ```
-3. Verify the data by checking the `dim_users`, `dim_card_details`, `dim_store_details`, `dim_products`, and `dim_date_times` tables in your `sales_data` database using pgAdmin4 or any SQL client:
+3. Run the `Full_M3_Script.sql` to update data types and schema changes across multiple tasks:
+    ```sh
+    psql -h your_host -U your_username -d your_database -f Milestone_3/Full_M3_Script.sql
+    ```
+4. Verify the data by checking the `dim_users`, `dim_card_details`, `dim_store_details`, `dim_products`, and `dim_date_times` tables in your `sales_data` database using pgAdmin4 or any SQL client:
     ```sql
     SELECT * FROM dim_users;
     SELECT * FROM dim_card_details;
@@ -79,18 +86,22 @@ This project centralizes sales data for a multinational company into a single Po
     ```
 
 ## File Structure
+
 ```
-Multinational-Retail-Data-Centralisation/
-├── .gitignore/
-	├── config.py # Should be added to .gitignore
-	├── db_creds_local.yaml # Should be added to .gitignore
-	├── db_creds_rds.yaml # Should be added to .gitignore
-├── data_cleaning.py
-├── daextraction.py
-├── abase_utils.py
-├─main.py
-├─README.md # This README.md
-├─required_packages.txt
+multinational-retail-data-centralisation652/
+├── Milestone_2/
+│   ├── config.py
+│   ├── data_cleaning.py
+│   ├── data_extraction.py
+│   ├── database_utils.py
+│   ├── db_creds_local.yaml
+│   ├── db_creds_rds.yaml
+│   └── main.py
+├── Milestone_3/
+│   └── Full_M3_Script.sql
+├── .gitignore
+├── README.md
+└── required_packages.txt
 ```
 
 ### Description of Files
@@ -103,6 +114,7 @@ Multinational-Retail-Data-Centralisation/
 - **data_extraction.py**: Contains the `DataExtractor` class for extracting data from various sources.
 - **database_utils.py**: Contains the `DatabaseConnector` class for handling database connections and operations.
 - **main.py**: Main script to run the ETL (Extract, Transform, Load) process, integrating all modules.
+- **Full_M3_Script.sql**: Consolidated and optimized SQL script for updating data types and schema changes across multiple tasks.
 - **README.md**: This README file.
 - **required_packages.txt**: File containing the required Python packages for the project.
 
@@ -135,6 +147,17 @@ Multinational-Retail-Data-Centralisation/
    - Improved code readability and maintainability by using meaningful naming conventions, eliminating code duplication, and adhering to the Single Responsibility Principle (SRP).
    - Implemented proper error handling and logging to enhance code robustness.
    - Used type annotations and consistent docstrings to improve code clarity and documentation.
+
+## Building Proper Foundations
+
+Building a proper foundation in your project is crucial to avoid spending a lot of time fixing issues later on when you are focused on other tasks. During this project, I learned the importance of setting up robust data cleaning and validation processes early on.
+
+### Example: Handling 'nan' Values in `data_cleaning.py`
+
+At one point, I encountered 'nan' values in the dataset, which were actually strings and not being cleaned properly. Initially, I considered simply filtering them out, but I realized this approach was not thorough. Instead, I implemented a validity filter on a categorical column to accept only good values and filter out the bad ones. This not only resolved the issue but also ensured better data quality.
+
+By addressing such issues early and thoroughly, you can save significant time and avoid headaches later in the project. Ensuring data integrity and cleanliness from the start lays a solid foundation for the entire data pipeline.
+
 
 ## License
 

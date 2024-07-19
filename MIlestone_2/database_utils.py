@@ -12,10 +12,12 @@ class DatabaseConnector:
         :param file_name: The name of the YAML file containing the database credentials.
         :return: A tuple containing a dictionary of the database credentials and a string indicating the type.
         """
+        # Load credentials from YAML file
         with open(file_name, 'r') as file:
             creds = yaml.safe_load(file)
         print(f"Credentials loaded from {file_name}")  # Debugging output
 
+        # Determine the type of credentials based on the keys in the dictionary
         if 'RDS_USER' in creds:
             creds_type = 'RDS'
         elif 'LOCAL_USER' in creds:
@@ -34,6 +36,7 @@ class DatabaseConnector:
         :param creds_type: A string specifying the type of credentials ('RDS' or 'LOCAL').
         :return: The initialized SQLAlchemy database engine.
         """
+        # Initialize database engine based on the type of credentials
         if creds_type == 'RDS':
             return create_engine(f"postgresql://{creds['RDS_USER']}:{creds['RDS_PASSWORD']}@{creds['RDS_HOST']}:{creds['RDS_PORT']}/{creds['RDS_DATABASE']}")
         elif creds_type == 'LOCAL':
@@ -47,8 +50,11 @@ class DatabaseConnector:
 
         :return: A list of all table names in the database.
         """
+        # Load credentials and initialize engine
         creds, creds_type = self.read_db_creds('db_creds_rds.yaml')
         engine = self.init_db_engine(creds, creds_type)
+        
+        # Execute query to retrieve table names
         with engine.connect() as connection:
             result = connection.execute(text("SELECT table_name FROM information_schema.tables WHERE table_schema='public';"))
             return [row[0] for row in result]
@@ -60,8 +66,11 @@ class DatabaseConnector:
         :param data_frame: The Pandas DataFrame to upload.
         :param table_name: The name of the table to upload the data to.
         """
+        # Load credentials and initialize engine
         creds, creds_type = self.read_db_creds('db_creds_local.yaml')
         engine = self.init_db_engine(creds, creds_type)
+        
+        # Upload DataFrame to the specified table
         data_frame.to_sql(table_name, engine, if_exists='replace', index=False)
 
 if __name__ == '__main__':

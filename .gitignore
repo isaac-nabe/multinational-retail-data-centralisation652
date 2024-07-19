@@ -1,0 +1,26 @@
+# Ignore database credentials
+db_creds_rds.yaml
+db_creds_local.yaml
+
+# Ignore configuration files
+config.py
+
+# Ignore compiled Python files
+__pycache__/
+Milestone_2/__pycache__/
+
+# Ignore Conda environment directory
+.conda/
+
+# Ignore CSV files (cleaned data and samples)
+*.csv
+
+# Ignore Jupyter notebook files (optional, if you don't want to track them)
+*.ipynb
+
+# Ignore test scripts (optional, if you don't want to track them)
+test_*.py
+
+# Optionally ignore all test scripts in a specific directory
+# Uncomment if you have a tests/ directory and want to ignore all its contents
+# tests/

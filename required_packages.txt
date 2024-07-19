@@ -1,8 +1,9 @@
 pandas
 sqlalchemy
-psycopg2
 pyyaml
 tabula-py
 requests
 re
 boto3
+os
+typing

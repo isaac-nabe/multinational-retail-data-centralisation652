@@ -12,8 +12,11 @@ class DataExtractor:
         :param table_name: Name of the table to read from the database.
         :return: DataFrame containing the data from the specified table.
         """
+        # Read database credentials and initialize the engine
         creds, creds_type = db_connector.read_db_creds('db_creds_rds.yaml')
         engine = db_connector.init_db_engine(creds, creds_type)
+        
+        # Execute query to retrieve table data
         query = f"SELECT * FROM {table_name}"
         return pd.read_sql(query, engine)
 
@@ -24,7 +27,10 @@ class DataExtractor:
         :param pdf_link: URL link to the PDF file.
         :return: DataFrame containing the extracted data.
         """
+        # Read all pages of the PDF into a list of DataFrames
         df_list = tabula.read_pdf(pdf_link, pages='all')
+        
+        # Concatenate all DataFrames into a single DataFrame
         return pd.concat(df_list, ignore_index=True)
 
     def list_number_of_stores(self, url: str, header: dict) -> int:
@@ -37,6 +43,8 @@ class DataExtractor:
         """
         response = requests.get(url, headers=header)
         data = response.json()
+        
+        # Check for 'number_stores' key in the response data
         if response.status_code == 200 and 'number_stores' in data:
             return data['number_stores']
         else:
@@ -52,9 +60,10 @@ class DataExtractor:
         :return: DataFrame containing details of all stores.
         """
         stores_data = []
-        for store_number in range(0, number_of_stores):
+        for store_number in range(number_of_stores):
             store_url = url.format(store_number=store_number)
             response = requests.get(store_url, headers=header)
+            
             if response.status_code == 200:
                 try:
                     store_data = response.json()
@@ -65,6 +74,8 @@ class DataExtractor:
                 print(f"Error fetching data for store {store_number}: {response.status_code}, {response.text}")
                 if response.status_code == 404:
                     break
+        
+        # Convert the list of store data to a DataFrame
         return pd.DataFrame(stores_data)
 
     def extract_from_s3(self, s3_products_address: str) -> pd.DataFrame:
@@ -77,20 +88,25 @@ class DataExtractor:
         bucket_name = s3_products_address.split('/')[2]
         file_key = '/'.join(s3_products_address.split('/')[3:])
         s3 = boto3.client('s3')
+        
+        # Download the file from S3
         s3.download_file(bucket_name, file_key, 'products.csv')
+        
+        # Read the CSV file into a DataFrame
         return pd.read_csv('products.csv')
 
     def extract_json_from_url(self, s3_sale_dates_address: str) -> pd.DataFrame:
         """
         Extracts a JSON file from the specified URL and returns it as a DataFrame.
 
-        :param url: URL to the JSON file.
+        :param s3_sale_dates_address: URL to the JSON file.
         :return: DataFrame containing the data from the JSON file.
         """
         response = requests.get(s3_sale_dates_address)
         data = response.json()
+        
+        # Convert the JSON data to a DataFrame
         return pd.DataFrame(data)
-
 
 if __name__ == '__main__':
     pass
