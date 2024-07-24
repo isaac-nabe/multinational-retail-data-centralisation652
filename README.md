@@ -99,6 +99,16 @@ multinational-retail-data-centralisation652/
 │   └── main.py
 ├── Milestone_3/
 │   └── Full_M3_Script.sql
+├── Milestone_4/
+│   ├── task_1.sql
+│   ├── task_2.sql
+│   ├── task_3.sql
+│   ├── task_4.sql
+│   ├── task_5.sql
+│   ├── task_6.sql
+│   ├── task_7.sql
+│   ├── task_8.sql
+│   └── task_9.sql
 ├── .gitignore
 ├── README.md
 └── required_packages.txt
@@ -110,13 +120,25 @@ multinational-retail-data-centralisation652/
 - **config.py**: Contains the API key and other configuration variables.
 - **db_creds_rds.yaml**: YAML file containing credentials for the remote RDS database (should be added to .gitignore).
 - **db_creds_local.yaml**: YAML file containing credentials for the local PostgreSQL database (should be added to .gitignore).
+- **required_packages.txt**: File containing the required Python packages for the project.
+- **README.md**: This README file.
+
 - **data_cleaning.py**: Contains the `DataCleaning` class for cleaning extracted data.
 - **data_extraction.py**: Contains the `DataExtractor` class for extracting data from various sources.
 - **database_utils.py**: Contains the `DatabaseConnector` class for handling database connections and operations.
 - **main.py**: Main script to run the ETL (Extract, Transform, Load) process, integrating all modules.
+
 - **Full_M3_Script.sql**: Consolidated and optimized SQL script for updating data types and schema changes across multiple tasks.
-- **README.md**: This README file.
-- **required_packages.txt**: File containing the required Python packages for the project.
+
+- **task_1.sql**: SQL script to find out how many stores the business has and in which countries.
+- **task_2.sql**: SQL script to find out which locations currently have the most stores.
+- **task_3.sql**: SQL script to determine which months produced the largest amount of sales.
+- **task_4.sql**: SQL script to identify how many sales are coming from online.
+- **task_5.sql**: SQL script to calculate the percentage of sales through each type of store.
+- **task_6.sql**: SQL script to discover which month in each year had the highest cost of sales.
+- **task_7.sql**: SQL script to get our staff headcount.
+- **task_8.sql**: SQL script to see which type of store in Germany is selling the most.
+- **task_9.sql**: SQL script to measure how quickly the company is making sales.
 
 ## Lessons Learned - "How to build an ETL Pipeline"
 
@@ -148,16 +170,18 @@ multinational-retail-data-centralisation652/
    - Implemented proper error handling and logging to enhance code robustness.
    - Used type annotations and consistent docstrings to improve code clarity and documentation.
 
-## Building Proper Foundations
+8. **SQL Query Optimization and Analysis**:
+   - Learned the importance of decomposing complex SQL queries into manageable steps to ensure accuracy and efficiency.
+   - Implemented window functions (like `LEAD`) to calculate differences between rows, simplifying complex calculations.
+   - Utilized `EXTRACT(EPOCH FROM ...)` to handle time differences in a straightforward manner, converting seconds into human-readable formats.
+   - Understood the importance of ordering and partitioning data correctly to ensure logical progression and accurate results.
+   - Recognized the value of intermediate CTEs (Common Table Expressions) for breaking down and debugging SQL queries effectively.
 
-Building a proper foundation in your project is crucial to avoid spending a lot of time fixing issues later on when you are focused on other tasks. During this project, I learned the importance of setting up robust data cleaning and validation processes early on.
-
-### Example: Handling 'nan' Values in `data_cleaning.py`
-
-At one point, I encountered 'nan' values in the dataset, which were actually strings and not being cleaned properly. Initially, I considered simply filtering them out, but I realized this approach was not thorough. Instead, I implemented a validity filter on a categorical column to accept only good values and filter out the bad ones. This not only resolved the issue but also ensured better data quality.
-
-By addressing such issues early and thoroughly, you can save significant time and avoid headaches later in the project. Ensuring data integrity and cleanliness from the start lays a solid foundation for the entire data pipeline.
-
+9. **Foundations for Robust Data Pipelines**:
+   - Emphasized setting up robust data cleaning and validation processes early in the project to avoid issues later.
+   - Addressed issues such as handling 'nan' values by implementing validity filters, ensuring better data quality from the start.
+   - Learned that thorough early-stage problem solving and data integrity checks save significant time and effort in later stages of the project.
+   - Understand the logic of the operations you want to execute, this way you at least know what you want to do even if you're not certain of    how to yet.
 
 ## License
 
