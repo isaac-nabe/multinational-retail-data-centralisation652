@@ -13,7 +13,7 @@
 
 This project centralizes sales data for a multinational company into a single PostgreSQL database, making it easily accessible and analyzable. The primary tasks include setting up the database, extracting data from various sources (such as AWS RDS, PDF files, APIs, and S3), cleaning the data, and loading it into a local PostgreSQL database. This centralized database acts as a single source of truth for sales data, facilitating up-to-date metrics for the business.
 
-### What I Learned
+### What I Learned:
 
 - How to set up and connect to both remote and local PostgreSQL databases using SQLAlchemy.
 - How to securely handle database credentials using YAML files.
@@ -29,6 +29,49 @@ This project centralizes sales data for a multinational company into a single Po
 - Importance of maintaining a robust data pipeline, breaking down code into single functions, and including debugging processes.
 - Refactoring and optimizing code for better readability, maintainability, and performance.
 - Using type annotations and docstrings to improve code clarity.
+
+### Specific Lessons Learned - "How to build an ETL Pipeline"
+
+1. **Database Connectivity**:
+   - Learned how to set up and connect to both remote and local PostgreSQL databases using SQLAlchemy.
+
+2. **Handling YAML Files**:
+   - Gained experience in securely handling database credentials using YAML files and ensuring they are not tracked by version control.
+
+3. **Data Extraction**:
+   - Learned how to extract data from a remote database and load it into a Pandas DataFrame for further processing.
+   - Learned how to extract data from a PDF using `tabula-py` and load it into a Pandas DataFrame.
+   - Learned how to extract data from an API and handle authentication securely.
+   - Learned how to extract data from an S3 bucket using `boto3`.
+   - Learned how to extract data from a JSON file using `requests`.
+
+4. **Data Cleaning**:
+   - Understood the importance of handling missing columns, data types, and erroneous values during the data cleaning process.
+   - Developed methods to clean user data, card data, store data, product data, and date events data effectively.
+
+5. **Debugging and Error Handling**:
+   - Gained experience in identifying and fixing various errors related to file handling, database connectivity, and data processing.
+
+6. **Version Control Best Practices**:
+   - Learned to use `.gitignore` to exclude sensitive files from version control and ensure a clean project repository.
+
+7. **Code Refactoring and Optimization**:
+   - Improved code readability and maintainability by using meaningful naming conventions, eliminating code duplication, and adhering to the Single Responsibility Principle (SRP).
+   - Implemented proper error handling and logging to enhance code robustness.
+   - Used type annotations and consistent docstrings to improve code clarity and documentation.
+
+8. **SQL Query Optimization and Analysis**:
+   - Learned the importance of decomposing complex SQL queries into manageable steps to ensure accuracy and efficiency.
+   - Implemented window functions (like `LEAD`) to calculate differences between rows, simplifying complex calculations.
+   - Utilized `EXTRACT(EPOCH FROM ...)` to handle time differences in a straightforward manner, converting seconds into human-readable formats.
+   - Understood the importance of ordering and partitioning data correctly to ensure logical progression and accurate results.
+   - Recognized the value of intermediate CTEs (Common Table Expressions) for breaking down and debugging SQL queries effectively.
+
+9. **Foundations for Robust Data Pipelines**:
+   - Emphasized setting up robust data cleaning and validation processes early in the project to avoid issues later.
+   - Addressed issues such as handling 'nan' values by implementing validity filters, ensuring better data quality from the start.
+   - Learned that thorough early-stage problem solving and data integrity checks save significant time and effort in later stages of the project.
+   - Understand the logic of the operations you want to execute, this way you at least know what you want to do even if you're not certain of    how to yet.
 
 ## Installation Instructions
 
@@ -76,13 +119,23 @@ This project centralizes sales data for a multinational company into a single Po
     ```sh
     psql -h your_host -U your_username -d your_database -f Milestone_3/Full_M3_Script.sql
     ```
-4. Verify the data by checking the `dim_users`, `dim_card_details`, `dim_store_details`, `dim_products`, and `dim_date_times` tables in your `sales_data` database using pgAdmin4 or any SQL client:
-    ```sql
-    SELECT * FROM dim_users;
-    SELECT * FROM dim_card_details;
-    SELECT * FROM dim_store_details;
-    SELECT * FROM dim_products;
-    SELECT * FROM dim_date_times;
+4.  Create a shell script file named "run_milestone_4_tasks.sh":
+    ```
+        echo '#!/bin/bash' > run_milestone_4_tasks.sh
+        echo 'psql -h your_host -U your_username -d your_database -f Milestone_4/task_1.sql' >> run_milestone_4_tasks.sh
+        echo 'psql -h your_host -U your_username -d your_database -f Milestone_4/task_2.sql' >> run_milestone_4_tasks.sh
+        echo 'psql -h your_host -U your_username -d your_database -f Milestone_4/task_3.sql' >> run_milestone_4_tasks.sh
+        echo 'psql -h your_host -U your_username -d your_database -f Milestone_4/task_4.sql' >> run_milestone_4_tasks.sh
+        echo 'psql -h your_host -U your_username -d your_database -f Milestone_4/task_5.sql' >> run_milestone_4_tasks.sh
+        echo 'psql -h your_host -U your_username -d your_database -f Milestone_4/task_6.sql' >> run_milestone_4_tasks.sh
+        echo 'psql -h your_host -U your_username -d your_database -f Milestone_4/task_7.sql' >> run_milestone_4_tasks.sh
+        echo 'psql -h your_host -U your_username -d your_database -f Milestone_4/task_8.sql' >> run_milestone_4_tasks.sh
+        echo 'psql -h your_host -U your_username -d your_database -f Milestone_4/task_9.sql' >> run_milestone_4_tasks.sh
+        chmod +x run_milestone_4_tasks.sh
+    ```
+    Run the shell script to execute all Milestone 4 task scripts:
+    ```sh
+        ./run_milestone_4_tasks.sh
     ```
 
 ## File Structure
@@ -140,48 +193,6 @@ multinational-retail-data-centralisation652/
 - **task_8.sql**: SQL script to see which type of store in Germany is selling the most.
 - **task_9.sql**: SQL script to measure how quickly the company is making sales.
 
-## Lessons Learned - "How to build an ETL Pipeline"
-
-1. **Database Connectivity**:
-   - Learned how to set up and connect to both remote and local PostgreSQL databases using SQLAlchemy.
-
-2. **Handling YAML Files**:
-   - Gained experience in securely handling database credentials using YAML files and ensuring they are not tracked by version control.
-
-3. **Data Extraction**:
-   - Learned how to extract data from a remote database and load it into a Pandas DataFrame for further processing.
-   - Learned how to extract data from a PDF using `tabula-py` and load it into a Pandas DataFrame.
-   - Learned how to extract data from an API and handle authentication securely.
-   - Learned how to extract data from an S3 bucket using `boto3`.
-   - Learned how to extract data from a JSON file using `requests`.
-
-4. **Data Cleaning**:
-   - Understood the importance of handling missing columns, data types, and erroneous values during the data cleaning process.
-   - Developed methods to clean user data, card data, store data, product data, and date events data effectively.
-
-5. **Debugging and Error Handling**:
-   - Gained experience in identifying and fixing various errors related to file handling, database connectivity, and data processing.
-
-6. **Version Control Best Practices**:
-   - Learned to use `.gitignore` to exclude sensitive files from version control and ensure a clean project repository.
-
-7. **Code Refactoring and Optimization**:
-   - Improved code readability and maintainability by using meaningful naming conventions, eliminating code duplication, and adhering to the Single Responsibility Principle (SRP).
-   - Implemented proper error handling and logging to enhance code robustness.
-   - Used type annotations and consistent docstrings to improve code clarity and documentation.
-
-8. **SQL Query Optimization and Analysis**:
-   - Learned the importance of decomposing complex SQL queries into manageable steps to ensure accuracy and efficiency.
-   - Implemented window functions (like `LEAD`) to calculate differences between rows, simplifying complex calculations.
-   - Utilized `EXTRACT(EPOCH FROM ...)` to handle time differences in a straightforward manner, converting seconds into human-readable formats.
-   - Understood the importance of ordering and partitioning data correctly to ensure logical progression and accurate results.
-   - Recognized the value of intermediate CTEs (Common Table Expressions) for breaking down and debugging SQL queries effectively.
-
-9. **Foundations for Robust Data Pipelines**:
-   - Emphasized setting up robust data cleaning and validation processes early in the project to avoid issues later.
-   - Addressed issues such as handling 'nan' values by implementing validity filters, ensuring better data quality from the start.
-   - Learned that thorough early-stage problem solving and data integrity checks save significant time and effort in later stages of the project.
-   - Understand the logic of the operations you want to execute, this way you at least know what you want to do even if you're not certain of    how to yet.
 
 ## License
 
